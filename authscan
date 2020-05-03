@@ -1,0 +1,165 @@
+#!/usr/bin/env python3
+
+import os
+import sys
+import datetime
+from lib import colors
+from lib import status
+from scan import ping
+from scan import exister
+import shutil
+
+def source(target, folder, out):
+    print(status.st(), "Downloading sources")
+    download = folder + "/" + out
+    os.system("wget -O " + download + " -q " + target)
+    if os.path.exists(download):
+        print(status.ok(), "Sources successfully downloaded")
+    else:
+        print(status.ko(), "Something went whrong when trying to download sources")
+        menu("exit")
+
+def scanfolder(folder):
+    remove = None
+
+    print(status.st(), "Creating the folder's scan: '%s'" % folder)
+    if os.path.exists(folder):
+        print(status.iu(), "The folder named '%s' already exists" % folder)
+        remove = input(status.iu() + " Do you want to remove the folder '%s' [Y|n]: " % folder)
+        if remove == 'Y':
+            print(status.st(), "Removing the folder '%s'" % folder)
+            try:
+                shutil.rmtree(folder)
+            except OSError:
+                print(status.ko(), "Deletion of the directory '%s' failed" % folder)
+            else:
+                print(status.ok(), "Successfully deleted the directory '%s'" % folder)
+        else:
+            print(status.ko(), "Aboarting the creation, exiting program")
+            menu("exit")
+    try:
+        os.mkdir(folder)
+    except OSError:
+        print(status.ko(), "Creation of the directory '%s' failed" % folder)
+    else:
+        print(status.ok(), "Successfully created the directory '%s'" % folder)
+
+def webpaths(target, path, proto):
+    print(status.st(), "Brute-forcing the website's urls")
+    exister.exister(target, path, proto)
+    print(status.ok(), "All the urls have been brute-forced")
+
+def nmap(target):
+    print(status.st(), "Starting session 'NMAP'")
+    try:
+        os.system('nmap %s' % target)
+    except:
+        print(status.ko(), "Error occured during the NMAP's scan")
+    else:
+        print(status.ok(), "Session 'NMAP' ended")
+
+def scan(target, path, folder, out, proto):
+    if os.path.exists("logs.txt"):
+        try:
+            os.remove("logs.txt")
+        except:
+            print(status.ko(), "Deletion of the logs file failed 'logs.txt'")
+        else:
+            print(status.ok(), "Successfully deleted the file 'logs.txt'")
+    f = open("logs.txt", "w+")
+    print(status.st(), "Starting the scan of the target '%s'" % target)
+    f.write("%s : Starting the scan on '%s'\n" % (datetime.datetime.now(), target))
+    f.write("%s : Scan's folder creation started\n" % datetime.datetime.now())
+    scanfolder(folder)
+    f.write("%s : Connection test started\n" % datetime.datetime.now())
+    ping.ping(target)
+    f.write("%s : Connection test finished\n" % datetime.datetime.now())
+    f.write("%s : Downloading sources\n" % datetime.datetime.now())
+    source(target, folder,out)
+    f.write("%s : Download finished\n" % datetime.datetime.now())
+    f.write("%s : Starting session 'NMAP'\n" % datetime.datetime.now())
+    nmap(target)
+    f.write("%s : Session 'NMAP' ended\n" % datetime.datetime.now())
+    f.write("%s : Starting brute-force session\n" % datetime.datetime.now())
+    webpaths(target, path, proto)
+    f.write("%s : Brute-force session ended\n" % datetime.datetime.now())
+    f.write("%s : Exiting AUTHSCAN\n" % datetime.datetime.now())
+    f.close()
+
+def resume(target, proto, path, folder):
+    print("┬")
+    print("├ Target                : " + colors.red() + target + colors.reset())
+    print("├ Protocol              : " + colors.red() + proto + colors.reset())
+    print("├ Brute-force file      : " + colors.red() + path + colors.reset())
+    print("├ Output analysis folder: " + colors.red() + folder + colors.reset())
+    print("┴")
+
+
+def menu(command):
+    target  = None
+    proto   = None
+    path    = "attack"
+    out     = "website.html"
+    folder  = "analysis"
+
+    while command != "exit":
+        command = input(status.iu() + " Command: ")
+        if command == "target":
+            target = input(status.iu() + " Target: ")
+            if target != None:
+                print(status.ok(), "Target successfully added")
+                if target[len(target) - 1] == '/':
+                    target = target[:-1]
+            else:
+                print(status.ko(), "Target changement failed")
+        elif command == "protocol":
+            proto = input(status.iu() + " Protocol: ")
+            if proto != None:
+                print(status.ok(), "Protocol successfully set")
+            else:
+                print(status.ko(), "Protocol changement failed")
+        elif command == "path":
+            path = input(status.iu() + " Path: ")
+            print(status.st(), "Checking file's path")
+            if os.path.exists(path):
+                print(status.ok(), "File found")
+            else:
+                print(status.ko(), "File not found")
+                path = None
+        elif command == "resume":
+            if target == None and proto != None:
+                target = "EMPTY"
+                resume(target, proto, path, folder)
+                target = None
+            elif proto == None and target != None:
+                proto = "EMPTY"
+                resume(target, proto, path, folder)
+                proto = None
+            elif proto == None and target == None:
+                proto = "EMPTY"
+                target = "EMPTY"
+                resume(target, proto, path, folder)
+                proto = None
+                target = None
+            else:
+                resume(target, proto, path, folder)
+            
+
+        elif command == "exploit":
+            if target == None:
+                print(status.ko(), "Enter target to scan: 'target'")
+            elif proto == None:
+                print(status.ko(), "Enter protocole to scan: 'protocol'")
+            else:
+                if path == None:
+                    print(status.io(), "To configure the brute-force file, enter: 'path' on menu")
+                if folder == "analysis":
+                    print(status.io(), "To custom the analysis output folder, enter: 'folder' on menu")
+                scan(target, path, folder, out, proto)
+        elif command == "exit":
+            print(status.ok(), "Exit")
+            return (0)
+        else:
+            print(status.ko(), "Command not found")
+
+menu(None)

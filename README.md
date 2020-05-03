@@ -26,8 +26,7 @@ exit: O_o
 
 ## Example:
 <a>
-  <video src="https://github.com/Neotoxic-off/Authscan/raw/master/example.mp4" poster="poster.jpg" width="1500" height="1000" example>
-  </video>
+  <img src="https://github.com/Neotoxic-off/Authscan/raw/master/example.gif" alt="example"/>
 </a>
 
 

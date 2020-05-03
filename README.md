@@ -24,4 +24,7 @@ attack: the path of your bruteforce file
 exit: O_o
 ```
 
+## Example:
+<video src="example.mp4" poster="poster.jpg" width="1500" height="1000" example></video>
+
 

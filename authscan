@@ -12,8 +12,8 @@ import shutil
 def source(target, folder, out):
     print(status.st(), "Downloading sources")
     download = folder + "/" + out
-    os.system("wget -O " + download + " -q " + target)
-    if os.path.exists(download):
+    os.system("wget -O " + out + " -q " + target)
+    if os.path.isfile(download):
         print(status.ok(), "Sources successfully downloaded")
     else:
         print(status.ko(), "Something went whrong when trying to download sources")
@@ -59,7 +59,7 @@ def nmap(target):
         print(status.ok(), "Session 'NMAP' ended")
 
 def scan(target, path, folder, out, proto):
-    if os.path.exists("logs.txt"):
+    if os.path.isfile("logs.txt"):
         try:
             os.remove("logs.txt")
         except:
@@ -87,6 +87,12 @@ def scan(target, path, folder, out, proto):
     f.close()
 
 def resume(target, proto, path, folder):
+    if target == None:
+        target = "empty"
+    if proto == None:
+        proto = "empty"
+    if path == None:
+        path = "empty"
     print("┬")
     print("├ Target                : " + colors.red() + target + colors.reset())
     print("├ Protocol              : " + colors.red() + proto + colors.reset())
@@ -96,9 +102,18 @@ def resume(target, proto, path, folder):
 
 
 def menu(command):
+    i = 0
+    list_commands = [   "target: ip adress / url website",
+                        "exit: leave Authscan",
+                        "protocol: protocol used by the target you want to scan",
+                        "save: folder to save the scan results",
+                        "attack: the file to brutefore the domain",
+                        "resume: display the current config for the scan"
+                        "exploit: start the scan"
+                    ]
     target  = None
     proto   = None
-    path    = "attack"
+    path    = None
     out     = "website.html"
     folder  = "analysis"
 
@@ -118,33 +133,22 @@ def menu(command):
                 print(status.ok(), "Protocol successfully set")
             else:
                 print(status.ko(), "Protocol changement failed")
-        elif command == "path":
-            path = input(status.iu() + " Path: ")
-            print(status.st(), "Checking file's path")
-            if os.path.exists(path):
+        elif command == "save":
+            folder = input(status.iu() + " Save: ")
+            if folder != None:
+                print(status.ok(), "Save folder successfully set")
+            else:
+                print(status.ko(), "Save folder changement failed")
+        elif command == "attack":
+            path = input(status.iu() + " Attack: ")
+            print(status.st(), "Checking file's attack")
+            if os.path.isfile(path):
                 print(status.ok(), "File found")
             else:
                 print(status.ko(), "File not found")
                 path = None
         elif command == "resume":
-            if target == None and proto != None:
-                target = "EMPTY"
-                resume(target, proto, path, folder)
-                target = None
-            elif proto == None and target != None:
-                proto = "EMPTY"
-                resume(target, proto, path, folder)
-                proto = None
-            elif proto == None and target == None:
-                proto = "EMPTY"
-                target = "EMPTY"
-                resume(target, proto, path, folder)
-                proto = None
-                target = None
-            else:
-                resume(target, proto, path, folder)
-            
-
+            resume(target, proto, path, folder)
         elif command == "exploit":
             if target == None:
                 print(status.ko(), "Enter target to scan: 'target'")
@@ -156,6 +160,10 @@ def menu(command):
                 if folder == "analysis":
                     print(status.io(), "To custom the analysis output folder, enter: 'folder' on menu")
                 scan(target, path, folder, out, proto)
+        elif command == "help":
+            while i < (len(list_commands) - 1):
+                print("       " + list_commands[i])
+                i += 1
         elif command == "exit":
             print(status.ok(), "Exit")
             return (0)

@@ -17,6 +17,7 @@ save    : change your output folder save
 resume  : check your attack configuration
 exploit : start the scan
 attack  : the path of your bruteforce file
+help    : display the help menu
 exit    : O_o
 ```
 

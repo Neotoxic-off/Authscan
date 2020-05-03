@@ -13,54 +13,15 @@ chmod +x authscan
 
 ## Usage:
 #### Commands:
+
 ```
-target
-protocol
-path
-resume
-exploit
-folder
-exit
+target: the website / ip you want to scan
+protocol: the protocol of the website / ip
+save: change your output folder save
+resume: check your attack configuration
+exploit: start the scan
+attack: the path of your bruteforce file
+exit: O_o
 ```
 
-### Target: the website / ip you want to scan
-```
-[ >> ] Command: target
-[ >> ] Target: hack.me
-[ OK ] Target successfully added
-```
 
-### Protocol: the protocol of the website / ip
-```
-[ >> ] Command: protocol
-[ >> ] Protocol: https
-[ OK ] Protocol successfully set
-```
-
-### Path: the path of your bruteforce file
-```
-[ >> ] Command: path
-[ >> ] Path: ../test.txt
-[----] Checking file's path
-[ OK ] File found
-```
-
-### Folder: change your output folder save
-```
-[ >> ] Command: folder
-[ >> ] Folder: output
-[ OK ] Folder successfully set
-```
-
-### Resume: check your attack configuration
-```
-[ >> ] Command: resume
-┬
-├ Target                : hack.me
-├ Protocol              : https
-├ Brute-force file      : ../test.txt
-├ Output analysis folder: output
-┴
-```
-
-### Exploit: start your scan

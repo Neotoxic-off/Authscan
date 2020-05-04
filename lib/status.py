@@ -27,3 +27,7 @@ def ye():
 def no():
     no      = colors.reset() + "[" + colors.red() + " NO " + colors.reset() + "]"
     return (no)
+
+def info():
+    no      = colors.reset() + "[" + colors.white() + "INFO" + colors.reset() + "]"
+    return (no)

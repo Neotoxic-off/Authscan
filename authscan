@@ -7,12 +7,17 @@ from lib import colors
 from lib import status
 from scan import ping
 from scan import exister
+from scan import nmap
 import shutil
+
+def banner():
+    version = "0.1.2"
+    print(status.info() + " Authscan   v%s" % version)
 
 def source(target, folder, out):
     print(status.st(), "Downloading sources")
     download = folder + "/" + out
-    os.system("wget -O " + out + " -q " + target)
+    os.system("wget -O " + download + " -q " + target)
     if os.path.isfile(download):
         print(status.ok(), "Sources successfully downloaded")
     else:
@@ -21,7 +26,6 @@ def source(target, folder, out):
 
 def scanfolder(folder):
     remove = None
-
     print(status.st(), "Creating the folder's scan: '%s'" % folder)
     if os.path.exists(folder):
         print(status.iu(), "The folder named '%s' already exists" % folder)
@@ -44,19 +48,10 @@ def scanfolder(folder):
     else:
         print(status.ok(), "Successfully created the directory '%s'" % folder)
 
-def webpaths(target, path, proto):
+def webpaths(target, path, proto, folder):
     print(status.st(), "Brute-forcing the website's urls")
-    exister.exister(target, path, proto)
+    exister.exister(target, path, proto, folder)
     print(status.ok(), "All the urls have been brute-forced")
-
-def nmap(target):
-    print(status.st(), "Starting session 'NMAP'")
-    try:
-        os.system('nmap %s' % target)
-    except:
-        print(status.ko(), "Error occured during the NMAP's scan")
-    else:
-        print(status.ok(), "Session 'NMAP' ended")
 
 def scan(target, path, folder, out, proto):
     if os.path.isfile("logs.txt"):
@@ -66,7 +61,7 @@ def scan(target, path, folder, out, proto):
             print(status.ko(), "Deletion of the logs file failed 'logs.txt'")
         else:
             print(status.ok(), "Successfully deleted the file 'logs.txt'")
-    f = open("logs.txt", "w+")
+    f = open(folder + "/logs.txt", "w+")
     print(status.st(), "Starting the scan of the target '%s'" % target)
     f.write("%s : Starting the scan on '%s'\n" % (datetime.datetime.now(), target))
     f.write("%s : Scan's folder creation started\n" % datetime.datetime.now())
@@ -75,13 +70,13 @@ def scan(target, path, folder, out, proto):
     ping.ping(target)
     f.write("%s : Connection test finished\n" % datetime.datetime.now())
     f.write("%s : Downloading sources\n" % datetime.datetime.now())
-    source(target, folder,out)
+    source(target, folder, out)
     f.write("%s : Download finished\n" % datetime.datetime.now())
     f.write("%s : Starting session 'NMAP'\n" % datetime.datetime.now())
-    nmap(target)
+    nmap.nmap(target)
     f.write("%s : Session 'NMAP' ended\n" % datetime.datetime.now())
     f.write("%s : Starting brute-force session\n" % datetime.datetime.now())
-    webpaths(target, path, proto)
+    webpaths(target, path, proto, folder)
     f.write("%s : Brute-force session ended\n" % datetime.datetime.now())
     f.write("%s : Exiting AUTHSCAN\n" % datetime.datetime.now())
     f.close()
@@ -100,7 +95,6 @@ def resume(target, proto, path, folder):
     print("├ Output analysis folder: " + colors.red() + folder + colors.reset())
     print("┴")
 
-
 def menu(command):
     i = 0
     list_commands = [   "target: ip adress / url website",
@@ -108,7 +102,7 @@ def menu(command):
                         "protocol: protocol used by the target you want to scan",
                         "save: folder to save the scan results",
                         "attack: the file to brutefore the domain",
-                        "resume: display the current config for the scan"
+                        "resume: display the current config for the scan",
                         "exploit: start the scan"
                     ]
     target  = None
@@ -170,4 +164,5 @@ def menu(command):
         else:
             print(status.ko(), "Command not found")
 
+banner()
 menu(None)

@@ -7,9 +7,11 @@ cd Authscan
 chmod +x authscan
 ```
 
-## Usage:
-#### Commands:
+## Require:
+- python3
+- Nmap
 
+## Usage:
 ```
 target  : the website / ip you want to scan
 protocol: the protocol of the website / ip

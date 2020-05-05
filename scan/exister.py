@@ -7,18 +7,30 @@ from lib import status
 from lib import colors
 
 def exister(target, path, proto, folder):
+    i = 0
+    score = 0
     percent = 0
     total_success = 0
     tested = 0
     found = 0
     total_lines = 0
-    if target[len(target) - 1] != '/':
-        baseURL = proto + "://" + target + '/'
+    baseURL = target
+
+    while i < (len(proto) - 1):
+        if target[i] == proto[i]:
+            score += 1
+        i += 1
+
+    if score != (len(proto) - 1):
+        baseURL = proto + "://" + target
+
+    if target[len(target) - 1] != "/":
+        baseURL = baseURL + '/'
 
     if path != None and os.path.isfile(path):
         f = open(path, "r")
         r = open(path, "r")
-        log = open(folder + "/logs.txt", 'w')
+        log = open(folder + "/attack_resume.txt", 'w+')
     
         line = f.readline()
         tmp = r.readline()
@@ -37,7 +49,7 @@ def exister(target, path, proto, folder):
                 if resp.getcode() == 404:
                     log.write("Error 404 '{0}'\n").format(fullURL)
                 else:
-                    log.write("Found '{0}' Response: {1}\n".format(fullURL, resp.getcode()))
+                    log.write("    Found '{0}' Response: {1}\n".format(fullURL, resp.getcode()))
                     total_success += 1
             except:
                 log.write("Not found '{0}'\n".format(fullURL))

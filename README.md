@@ -1,4 +1,4 @@
-# Authscan v0.1
+# Authscan v0.1.2
 
 ## Install:
 ```

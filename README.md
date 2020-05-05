@@ -1,4 +1,4 @@
-# Authscan v0.1.3
+# Authscan v1.0.0
 
 ## Install:
 ```
@@ -22,6 +22,12 @@ attack  : the path of your bruteforce file
 help    : display the help menu
 exit    : O_o
 ```
+
+## NMAP:
+Custom script execution:
+Default path of the nmap's scripts: '/usr/share/nmap/scripts'
+
+Write 'exit' to stop the custom execution
 
 ## Example:
 <p>

@@ -3,15 +3,17 @@
 import os
 import sys
 import datetime
+
 from lib import colors
 from lib import status
+
+from scan import folder
 from scan import ping
 from scan import exister
 from scan import nmap
-import shutil
 
 def banner():
-    version = "0.1.3"
+    version = "1.0.0"
     print(status.info() + " Authscan   v%s" % version)
 
 def source(target, folder, out):
@@ -24,61 +26,17 @@ def source(target, folder, out):
         print(status.ko(), "Something went whrong when trying to download sources")
         menu("exit")
 
-def scanfolder(folder):
-    remove = None
-    print(status.st(), "Creating the folder's scan: '%s'" % folder)
-    if os.path.exists(folder):
-        print(status.iu(), "The folder named '%s' already exists" % folder)
-        remove = input(status.iu() + " Do you want to remove the folder '%s' [Y|n]: " % folder)
-        if remove == 'Y':
-            print(status.st(), "Removing the folder '%s'" % folder)
-            try:
-                shutil.rmtree(folder)
-            except OSError:
-                print(status.ko(), "Deletion of the directory '%s' failed" % folder)
-            else:
-                print(status.ok(), "Successfully deleted the directory '%s'" % folder)
-        else:
-            print(status.ko(), "Aboarting the creation, exiting program")
-            menu("exit")
-    try:
-        os.mkdir(folder)
-    except OSError:
-        print(status.ko(), "Creation of the directory '%s' failed" % folder)
-    else:
-        print(status.ok(), "Successfully created the directory '%s'" % folder)
-
 def webpaths(target, path, proto, folder):
     print(status.st(), "Brute-forcing the website's urls")
     exister.exister(target, path, proto, folder)
     print(status.ok(), "All the urls have been brute-forced")
 
-def scan(target, path, folder, out, proto):
-    scanfolder(folder)
-    if os.path.isfile(folder + "/logs.txt"):
-        try:
-            os.remove(folder + "/logs.txt")
-        except:
-            print(status.ko(), "Deletion of the logs file failed 'logs.txt'")
-        else:
-            print(status.ok(), "Successfully deleted the file 'logs.txt'")
-    f = open(folder + "/logs.txt", "w+")
-    print(status.st(), "Starting the scan of the target '%s'" % target)
-    f.write("%s : Starting the scan on '%s'\n" % (datetime.datetime.now(), target))
-    f.write("%s : Connection test started\n" % datetime.datetime.now())
+def scan(target, path, folder_path, out, proto):
+    folder.folder(folder_path)
     ping.ping(target)
-    f.write("%s : Connection test finished\n" % datetime.datetime.now())
-    f.write("%s : Downloading sources\n" % datetime.datetime.now())
-    source(target, folder, out)
-    f.write("%s : Download finished\n" % datetime.datetime.now())
-    f.write("%s : Starting session 'NMAP'\n" % datetime.datetime.now())
+    source(target, folder_path, out)
     nmap.nmap(target)
-    f.write("%s : Session 'NMAP' ended\n" % datetime.datetime.now())
-    f.write("%s : Starting brute-force session\n" % datetime.datetime.now())
-    webpaths(target, path, proto, folder)
-    f.write("%s : Brute-force session ended\n" % datetime.datetime.now())
-    f.write("%s : Closing the file\n" % datetime.datetime.now())
-    f.close()
+    webpaths(target, path, proto, folder_path)
 
 def resume(target, proto, path, folder):
     if target == None:

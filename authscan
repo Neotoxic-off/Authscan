@@ -54,6 +54,7 @@ def webpaths(target, path, proto, folder):
     print(status.ok(), "All the urls have been brute-forced")
 
 def scan(target, path, folder, out, proto):
+    scanfolder(folder)
     if os.path.isfile("logs.txt"):
         try:
             os.remove("logs.txt")
@@ -64,8 +65,6 @@ def scan(target, path, folder, out, proto):
     f = open(folder + "/logs.txt", "w+")
     print(status.st(), "Starting the scan of the target '%s'" % target)
     f.write("%s : Starting the scan on '%s'\n" % (datetime.datetime.now(), target))
-    f.write("%s : Scan's folder creation started\n" % datetime.datetime.now())
-    scanfolder(folder)
     f.write("%s : Connection test started\n" % datetime.datetime.now())
     ping.ping(target)
     f.write("%s : Connection test finished\n" % datetime.datetime.now())

@@ -19,7 +19,7 @@ def folder(folder):
                 print(status.ok(), "Successfully deleted the directory '%s'" % folder)
         else:
             print(status.ko(), "Aboarting the creation, exiting program")
-            menu("exit")
+            exit(0)
     try:
         os.mkdir(folder)
     except OSError:

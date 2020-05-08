@@ -55,15 +55,13 @@ def exister(target, path, proto, folder):
                 log.write("Not found '{0}'\n".format(fullURL))
 
             percent = ((tested / total_lines) * 100)
-            sys.stdout.write("Found: %d Tested: %d Total: %d Progress: %d" % (total_success, tested, total_lines, percent))
-            sys.stdout.write("%")
+            sys.stdout.write("Found: " + colors.green() + str(total_success) + colors.reset() + " Tested: " + colors.white() + str(tested)  + colors.reset() + " Total: " + colors.cyan() + "%d" % percent + colors.reset() + "%")
             sys.stdout.flush()
             sys.stdout.write('\b' * (7 + 9 + 8 + 12 + len(str(total_success)) + len(str(tested)) + len(str(total_lines)) + len(str(percent))))
             sys.stdout.flush()
             line = f.readline()
         f.close()
         log.close()
-        print('Found: %d Tested: %d Total: %d\n' % (total_success, tested, total_lines))
+        print("Found: " + colors.green() + str(total_success) + colors.reset() + " Tested: " + colors.white() + str(tested)  + colors.reset() + " Total: " + colors.cyan() + "%d" % percent + colors.reset() + "% => '" + colors.purple() + "%s/attack_resume.txt" % folder + colors.reset() + "'")
     else:
         print(status.ye() + " Skipping brute-force part, due to uninitialiation of the path")
-        return

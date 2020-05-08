@@ -2,10 +2,8 @@
 
 import os
 import sys
-
 from lib import colors
 from lib import status
-
 from scan import folder
 from scan import ping
 from scan import exister
@@ -14,6 +12,39 @@ from scan import nmap
 def banner():
     version = "1.0.0"
     print(status.info() + " Authscan   v%s" % version)
+
+def arguments():
+    i = 1
+    target  =  None
+    proto   =  None
+    folder  =  "analysis"
+    path    =  "custom/basics"
+    out     =  "index.html"
+    len_arg =  len(sys.argv)
+
+    if len_arg >= 3:
+        while i < len_arg:
+            if target == None:
+                target = sys.argv[i]
+            elif proto == None:
+                proto = sys.argv[i]
+            elif path == "custom/basics" and i == 3:
+                if os.path.exists(sys.argv[i]):
+                    path = sys.argv[i]
+                else:
+                    print(status.ko(), "File: '%s' not found" % sys.argv[i])
+                    exit(84)
+            elif folder == "analysis":
+                folder = sys.argv[i]
+            i += 1
+        resume(target, proto, path, folder)
+        choice = input(status.iu() + " Do you want to start the scan [Y|n]: ")
+        if choice == 'Y':
+            scan(target, path, folder, out, proto)
+        else:
+            print("\nUsage: <target> <protocol> <attack file> <save folder>")
+            print("       Save folder and attack file are optional")
+            exit(0)
 
 def source(target, folder, out):
     print(status.st(), "Downloading sources")
@@ -38,18 +69,10 @@ def scan(target, path, folder_path, out, proto):
     webpaths(target, path, proto, folder_path)
 
 def resume(target, proto, path, folder):
-    if target == None:
-        target = "empty"
-    if proto == None:
-        proto = "empty"
-    if path == None:
-        path = "empty"
-    print("┬")
-    print("├ Target                : " + colors.red() + target + colors.reset())
-    print("├ Protocol              : " + colors.red() + proto + colors.reset())
-    print("├ Brute-force file      : " + colors.red() + path + colors.reset())
-    print("├ Output analysis folder: " + colors.red() + folder + colors.reset())
-    print("┴")
+    print(status.io() + " Target      : " + colors.red() + str(target) + colors.reset())
+    print(status.io() + " Protocol    : " + colors.red() + str(proto) + colors.reset())
+    print(status.io() + " Attack file : " + colors.red() + str(path) + colors.reset())
+    print(status.io() + " Save folder : " + colors.red() + str(folder) + colors.reset())
 
 def menu(command):
     i = 0
@@ -60,8 +83,7 @@ def menu(command):
                         "attack: the file to brutefore the domain",
                         "resume: display the current config for the scan",
                         "exploit: start the scan",
-                        None
-                    ]
+                        None ]
     target  = None
     proto   = None
     path    = "custom/basics"
@@ -125,4 +147,5 @@ def menu(command):
             print(status.ko(), "Command not found")
 
 banner()
+arguments()
 menu(None)

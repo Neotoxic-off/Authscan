@@ -10,7 +10,7 @@ from scan import exister
 from scan import nmap
 
 def banner():
-    version = "1.0.0"
+    version = "1.1.0"
     print(status.info() + " Authscan   v%s" % version)
 
 def arguments():

@@ -23,6 +23,13 @@ help    : display the help menu
 exit    : O_o
 ```
 
+OR WITH ARGUMENTS
+
+```
+./authscan <target> <protocol> <attack> <save>
+```
+TARGET AND PROTOCOL ARE OBLIGATORY !
+
 ## NMAP:
 Custom script execution:
 Default path of the nmap's scripts: '/usr/share/nmap/scripts'

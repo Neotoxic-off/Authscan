@@ -8,9 +8,10 @@ from scan import folder
 from scan import ping
 from scan import exister
 from scan import nmap
+from scan import linker
 
 def banner():
-    version = "1.1.0"
+    version = "1.2.0"
     print(status.info() + " Authscan   v%s" % version)
 
 def arguments():
@@ -67,6 +68,7 @@ def scan(target, path, folder_path, out, proto):
     source(target, folder_path, out)
     nmap.nmap(target)
     webpaths(target, path, proto, folder_path)
+    linker.linker(target, path, proto, folder_path, out)
 
 def resume(target, proto, path, folder):
     print(status.io() + " Target      : " + colors.red() + str(target) + colors.reset())

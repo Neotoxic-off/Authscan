@@ -40,6 +40,7 @@ Write 'exit' to stop the custom execution
 ## Example:
 <p>
   <img src="https://github.com/Neotoxic-off/Authscan/raw/master/example.gif" alt="example"/>
+ 
 </p>
 
 

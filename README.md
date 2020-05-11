@@ -9,7 +9,8 @@ chmod +x authscan
 
 ## Require:
 - python3
-- Nmap
+- nmap
+- wget
 
 ## Usage:
 ```

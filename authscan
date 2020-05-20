@@ -12,7 +12,7 @@ from scan import linker
 
 def banner():
     version = "1.2.0"
-    print(status.info() + " Authscan   v%s" % version)
+    print(status.info() + " Authscan " + colors.red() + "v%s" % version + colors.reset())
 
 def arguments():
     i = 1

@@ -7,7 +7,7 @@ def ping(target):
     print(status.st(), "Checking your internet connection with '8.8.8.8'")
     handshake = os.system("ping -c %s 8.8.8.8 -q" % packet)
     if handshake != 0:
-        print(status.ko(), "Connection on your internet failed" % target)
+        print(status.ko(), "Connection on your internet failed")
         cont = input(status.iu() + " Continue [Y|n]: ")
         if cont != 'Y':
             exit(84)

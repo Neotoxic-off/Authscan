@@ -51,7 +51,6 @@ def linker(target, path, proto, folder, out):
                         r.write(line[i])
                         i += 1
                     r.write('\n')
-                    url += 1
                 i += 1
             i = 0
             line = f.readline()

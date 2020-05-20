@@ -9,7 +9,8 @@ chmod +x authscan
 
 ## Require:
 - python3
-- Nmap
+- nmap
+- wget
 
 ## Usage:
 ```
@@ -35,10 +36,5 @@ Custom script execution:
 Default path of the nmap's scripts: '/usr/share/nmap/scripts'
 
 Write 'exit' to stop the custom execution
-
-## Example:
-<p>
-  <img src="https://github.com/Neotoxic-off/Authscan/raw/master/example.gif" alt="example"/>
-</p>
 
 
